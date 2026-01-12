@@ -1,1 +1,323 @@
-# Solar
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>木曜修仙門法年終賽 - 群魔亂舞</title>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@900&display=swap');
+
+        :root {
+            --bg-black: #020406;
+            --atk-glow: #ff0044;
+            --def-glow: #00d9ff;
+            --text-gold: #f3cf7a;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            background-color: var(--bg-black);
+            background-image: 
+                radial-gradient(circle at 20% 30%, rgba(255, 0, 68, 0.1) 0%, transparent 40%),
+                radial-gradient(circle at 80% 70%, rgba(0, 217, 255, 0.1) 0%, transparent 40%);
+            color: #fff;
+            font-family: 'Noto Serif TC', serif;
+            margin: 0;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* 標題區域調校 */
+        .header {
+            padding: 100px 20px 60px;
+            text-align: center;
+            position: relative;
+        }
+
+        .header h1 {
+            font-size: clamp(2.5rem, 10vw, 5rem);
+            margin: 0;
+            text-transform: uppercase;
+            background: linear-gradient(to bottom, #fff 30%, var(--text-gold) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 20px rgba(243, 207, 122, 0.4));
+            letter-spacing: 0.2em;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            color: var(--text-gold);
+            letter-spacing: 0.5em;
+            margin-top: 20px;
+            opacity: 0.8;
+        }
+
+        /* 戰場容器 */
+        .battle-container {
+            display: grid;
+            grid-template-columns: 1fr 240px 1fr;
+            width: 95%;
+            max-width: 1600px;
+            gap: 20px;
+            padding-bottom: 100px;
+        }
+
+        /* 門派卡片：流光設計 */
+        .sect-card {
+            position: relative;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 40px;
+            margin-bottom: 50px;
+            border-radius: 4px;
+            overflow: hidden;
+            transition: 0.5s;
+            opacity: 0;
+            transform: scale(0.9) translateY(30px);
+        }
+
+        .sect-card.visible {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+        }
+
+        /* 動態流光邊框效果 */
+        .sect-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, currentColor, transparent);
+            animation: scan 3s linear infinite;
+        }
+
+        .attacker { color: var(--atk-glow); }
+        .defender { color: var(--def-glow); }
+
+        @keyframes scan {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .sect-title {
+            font-size: 2rem;
+            margin-bottom: 15px;
+            font-weight: 900;
+            display: block;
+            filter: drop-shadow(0 0 10px currentColor);
+        }
+
+        .tag {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 5px 15px;
+            font-size: 0.9rem;
+            border: 1px solid currentColor;
+            margin-bottom: 30px;
+            display: inline-block;
+            letter-spacing: 1px;
+        }
+
+        /* 成員名單細節 */
+        .member-list {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            list-style: none;
+            padding: 0;
+        }
+
+        .member-item {
+            color: #fff;
+            font-size: 1.1rem;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.03);
+            border-left: 2px solid currentColor;
+            transition: 0.3s;
+        }
+
+        .member-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateX(10px);
+        }
+
+        /* VS 核心 Nexus 調校 */
+        .core-nexus {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: sticky;
+            top: 20%;
+            height: fit-content;
+        }
+
+        .vs-circle {
+            width: 160px;
+            height: 160px;
+            border: 1px solid #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            font-weight: 900;
+            background: #000;
+            position: relative;
+            box-shadow: 0 0 50px rgba(255, 255, 255, 0.2);
+        }
+
+        .vs-circle::after {
+            content: 'VS';
+            position: absolute;
+            color: rgba(255, 255, 255, 0.1);
+            font-size: 8rem;
+            z-index: -1;
+        }
+
+        /* 響應式：手機佈局 */
+        @media (max-width: 1024px) {
+            .battle-container {
+                grid-template-columns: 1fr;
+                padding: 0 20px;
+            }
+            .core-nexus {
+                grid-row: 2;
+                position: static;
+                padding: 60px 0;
+            }
+            .column:nth-child(1) { grid-row: 1; }
+            .column:nth-child(3) { grid-row: 3; }
+            .sect-card { padding: 30px 20px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <h1>木曜修仙門法年終賽</h1>
+    <p>群魔亂舞 · 八大門派 · 頂尖對壘</p>
+</div>
+
+<div class="battle-container">
+    
+    <div class="column">
+        <div class="sect-card attacker">
+            <span class="sect-title">拍痰翻身碎骨宗</span>
+            <div class="tag">邪修法門：骨化筋移 [進攻一]</div>
+            <ul class="member-list">
+                <li class="member-item">宗主：阿定</li>
+                <li class="member-item">長老：皓皓</li>
+                <li class="member-item">護法：岡田</li>
+                <li class="member-item">真傳：德寶</li>
+            </ul>
+        </div>
+
+        <div class="sect-card attacker">
+            <span class="sect-title">攻城四仙 鳳雨雷電</span>
+            <div class="tag">禁術：天災召喚 [進攻二]</div>
+            <ul class="member-list">
+                <li class="member-item">風仙：大雄</li>
+                <li class="member-item">雨仙：閃亮</li>
+                <li class="member-item">雷仙：天天</li>
+                <li class="member-item">電仙：修宇</li>
+            </ul>
+        </div>
+
+        <div class="sect-card attacker">
+            <span class="sect-title">操獸御0宗</span>
+            <div class="tag">秘法：萬獸暴走 [進攻三]</div>
+            <ul class="member-list">
+                <li class="member-item">獸皇：阿翔</li>
+                <li class="member-item">馭龍：許誠</li>
+                <li class="member-item">虎王：麥基</li>
+                <li class="member-item">蛇姬：小曹</li>
+            </ul>
+        </div>
+
+        <div class="sect-card attacker">
+            <span class="sect-title">掩月幻影魔宗</span>
+            <div class="tag">幻術：月影迷蹤 [進攻四]</div>
+            <ul class="member-list">
+                <li class="member-item">月魔：Nick</li>
+                <li class="member-item">幻妖：Nice</li>
+                <li class="member-item">影魅：傻恩</li>
+                <li class="member-item">暗刺：阿偉</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="core-nexus">
+        <div class="vs-circle">VS</div>
+        <div>
+            <p style="color: var(--atk-glow); margin-bottom: 5px;">← 奪天機</p>
+            <p style="color: var(--def-glow);">護法脈 →</p>
+        </div>
+    </div>
+
+    <div class="column">
+        <div class="sect-card defender">
+            <span class="sect-title">聖道雙修合歡宗</span>
+            <div class="tag">玄功：陰陽並濟 [防禦一]</div>
+            <ul class="member-list">
+                <li class="member-item">教主：小志</li>
+                <li class="member-item">聖使：阿鵬</li>
+                <li class="member-item">使者：威達</li>
+                <li class="member-item">散人：阿平</li>
+            </ul>
+        </div>
+
+        <div class="sect-card defender">
+            <span class="sect-title">靈獸守山宗</span>
+            <div class="tag">陣法：磐石固守 [防禦二]</div>
+            <ul class="member-list">
+                <li class="member-item">鎮山：小安</li>
+                <li class="member-item">守閣：阿侖</li>
+                <li class="member-item">衛道：小翔</li>
+                <li class="member-item">執法：阿虎</li>
+            </ul>
+        </div>
+
+        <div class="sect-card defender">
+            <span class="sect-title">七玄聖門</span>
+            <div class="tag">仙法：七星匯聚 [防禦三]</div>
+            <ul class="member-list">
+                <li class="member-item">大長老：Kent</li>
+                <li class="member-item">村長：村長</li>
+                <li class="member-item">法師：Paul</li>
+                <li class="member-item">護山：魯蛋</li>
+            </ul>
+        </div>
+
+        <div class="sect-card defender">
+            <span class="sect-title">天南第一落雲宗</span>
+            <div class="tag">正宗：浩然正氣 [防禦四]</div>
+            <ul class="member-list">
+                <li class="member-item">劍首：成成</li>
+                <li class="member-item">道尊：阿勳</li>
+                <li class="member-item">真人：威威</li>
+                <li class="member-item">劍修：凱力</li>
+            </ul>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
+        });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.sect-card').forEach(card => observer.observe(card));
+</script>
+
+</body>
+</html>
