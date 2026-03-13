@@ -3,22 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>曜日天梯榜 - LADDER DATA SYS</title>
+    <title>曜日獵人星級考核總榜 - HUNTER ASSOC. DB</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@500;900&family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
         :root {
-            /* 保留所有特效，僅替換為「戰情儀表板」配色 */
-            --eva-dark-bg: #0b0e17; /* 戰情室深海軍藍 */
-            --eva-purple: #00e5ff; /* 原紫色替換為：霓虹青 (主點綴與發光色) */
-            --eva-green: #00e676; /* 優良狀態：明亮科技綠 */
-            --eva-orange: #ff4d4d; /* 警告狀態：警戒紅 */
+            --eva-dark-bg: #0b0e17; 
+            --eva-purple: #00e5ff; 
+            --eva-green: #00e676; 
+            --eva-orange: #ff4d4d; 
             
             --color-platinum: #00e5ff;
             --color-gold: #ffd700;
-            --color-silver: #ff4444; /* 白銀改為：紅色系 */
-            --color-bronze: #00e676; /* 青銅改為：綠色系 */
-            --glass-bg: rgba(20, 26, 35, 0.95); /* 帶藍色調的深灰玻璃 */
+            --color-silver: #ff4444; 
+            --color-bronze: #00e676; 
+            --glass-bg: rgba(20, 26, 35, 0.95); 
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -32,16 +31,15 @@
             position: relative;
         }
 
-        /* === Loading === */
         #loadingOverlay {
             display: flex; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: var(--eva-dark-bg); z-index: 10000; align-items: center; justify-content: center; flex-direction: column;
         }
         .loader-text { font-size: 0; animation: blink 0.5s infinite alternate; }
-        .loader-text::after { content: "CONNECTING TO RADAR..."; font-size: 2rem; font-family: 'Orbitron', sans-serif; color: var(--eva-purple); }
+        /* 替換載入文字 */
+        .loader-text::after { content: "ACCESSING CONFIDENTIAL DATA..."; font-size: 2rem; font-family: 'Orbitron', sans-serif; color: var(--eva-purple); }
         @keyframes blink { from { opacity: 1; } to { opacity: 0.3; } }
 
-        /* === Background Effects === */
         .scanline-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 9999;
             background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%), 
@@ -56,7 +54,6 @@
         }
         @keyframes gridMove { 0% { background-position: 0 0; } 100% { background-position: 0 40px; } }
 
-        /* === Header === */
         .sticky-controls {
             position: sticky; top: 0; z-index: 1000;
             background: rgba(11, 14, 23, 0.98); backdrop-filter: blur(15px);
@@ -81,11 +78,12 @@
         
         .deco-corner-text { position: absolute; font-family: 'Orbitron', monospace; font-size: 0; color: var(--eva-orange); opacity: 0.8; line-height: 1.2; }
         .deco-tl { top: 8px; left: 15px; border-left: 2px solid var(--eva-purple); padding-left: 6px; }
-        .deco-tl::after { content: "DATA\nSYS."; font-size: 0.5rem; color: var(--eva-purple); display: block; }
+        /* 替換左上角裝飾 */
+        .deco-tl::after { content: "V5\nSECURE"; font-size: 0.5rem; color: var(--eva-purple); display: block; }
         .deco-br { bottom: 8px; right: 15px; border-right: 2px solid var(--eva-green); padding-right: 6px; text-align: right; }
-        .deco-br::after { content: "RADAR\nONLINE"; font-size: 0.5rem; color: var(--eva-green); display: block; }
+        /* 替換右上角裝飾 */
+        .deco-br::after { content: "NEN RADAR\nON"; font-size: 0.5rem; color: var(--eva-green); display: block; }
 
-        /* === Filters === */
         .filter-container { width: 100%; overflow-x: auto; padding: 5px 10px; text-align: center; }
         .filter-group { display: inline-flex; justify-content: center; gap: 10px; white-space: nowrap; padding-bottom: 5px; margin: 0 auto; }
         .filter-btn {
@@ -110,16 +108,15 @@
         }
         #searchInput:focus { border-color: var(--eva-green); box-shadow: 0 0 10px rgba(0, 230, 118, 0.2); }
 
-        /* === View === */
         .ladder-wrapper { max-width: 1200px; margin: 0 auto; padding: 10px 5px; position:relative; z-index:1; width: 100%; }
         .ladder-wrapper > div:first-child { font-size: 0 !important; }
-        .ladder-wrapper > div:first-child::after { content: "曜日戰情中心 // TACTICAL LADDER RADAR"; font-size: 0.65rem; color: #fff; }
+        /* 替換列表上方分隔條文字 */
+        .ladder-wrapper > div:first-child::after { content: "審查委員會機密評估 // COMMITTEE CONFIDENTIAL LOG"; font-size: 0.65rem; color: #fff; }
 
         table { width: 100%; display: block; }
 
         @keyframes slideIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Card View Layout */
         tbody.card-view { 
             display: grid; 
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
@@ -136,22 +133,18 @@
         tbody.card-view td { display: block; width: 100%; border: none; text-align: left; padding: 0; }
         tbody.card-view .col-rank { display: none !important; }
 
-        /* 分組邊框特效 */
         tbody.card-view tr.row-platinum { border: 2px solid var(--color-platinum) !important; box-shadow: 0 0 15px rgba(0, 229, 255, 0.2) !important; }
         tbody.card-view tr.row-platinum::before { content: "CLASSIFIED // TOP SECRET"; position: absolute; top: 0; left: 0; width: 100%; background: var(--color-platinum); color: #000; font-size: 0.5rem; font-weight: 900; text-align: center; padding: 1px; z-index: 2; }
 
         tbody.card-view tr.row-gold { border: 1px solid var(--color-gold) !important; box-shadow: 0 0 15px rgba(255, 215, 0, 0.15) !important; }
         tbody.card-view tr.row-gold::before { content: "PRIORITY // FIRST CLASS"; position: absolute; top: 0; left: 0; width: 100%; background: linear-gradient(90deg, transparent, var(--color-gold), transparent); color: #000; font-size: 0.5rem; font-weight: 900; text-align: center; padding: 1px; z-index: 2; }
 
-        /* 白銀改紅色系 rgba(255, 68, 68) */
         tbody.card-view tr.row-silver { border: 1px solid var(--color-silver) !important; box-shadow: inset 0 0 20px rgba(255, 68, 68, 0.05) !important; }
         tbody.card-view tr.row-silver::before { content: "TACTICAL // RESERVE"; position: absolute; top: 0; left: 0; width: 100%; background: rgba(255, 68, 68, 0.1); border-bottom: 1px solid var(--color-silver); color: var(--color-silver); font-size: 0.5rem; font-weight: 900; text-align: center; padding: 1px; z-index: 2; }
 
-        /* 青銅改綠色系 rgba(0, 230, 118) */
         tbody.card-view tr.row-bronze { border: 1px dashed var(--color-bronze) !important; background-image: linear-gradient(0deg, transparent 50%, rgba(0, 230, 118, 0.05) 50%); background-size: 100% 4px; }
         tbody.card-view tr.row-bronze::before { content: "CALIBRATING // TRAINEE"; position: absolute; top: 0; left: 0; width: 100%; background: rgba(0, 230, 118, 0.1); color: var(--color-bronze); font-size: 0.5rem; font-weight: 900; text-align: center; padding: 1px; z-index: 2; }
 
-        /* Rank Badge 特效 */
         .rank-badge-box {
             display: inline-block; width: 42px; height: 42px; line-height: 42px;
             text-align: center; border-radius: 50%; font-family: 'Orbitron', sans-serif; transition: 0.3s;
@@ -198,7 +191,6 @@
 
         .stats-hud { display: flex; justify-content: space-between; gap: 5px; font-size: 0.65rem; color: #888; font-family: 'Orbitron', monospace; border-top: 1px solid #333; padding-top: 8px; margin-top: 8px; position: relative; z-index: 1;}
 
-        /* HUD 偽裝 */
         .stats-hud > div { position: relative; overflow: hidden; }
         .stats-hud > div:first-child::before {
             content: "水見式純度:"; position: absolute; left: 0; top: 0; padding-right: 5px;
@@ -211,7 +203,6 @@
             color: #888; font-family: 'Noto Sans TC', sans-serif;
         }
 
-        /* === Modal Environment & Card Styles === */
         .modal { 
             display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; 
             backdrop-filter: blur(8px); align-items: center; justify-content: center; 
@@ -319,8 +310,8 @@
         <div class="header-box">
             <div class="deco-corner-text deco-tl">MAGI<br>SYS.</div>
             <div class="deco-corner-text deco-br">VER<br>2.0</div>
-            <div class="title-card">曜日天梯榜</div>
-            <div class="sub-title">SOLAR CUP LEAGUE</div>
+            <div class="title-card">曜日獵人星級考核總榜</div>
+            <div class="sub-title">HUNTER STAR RATING BOARD</div>
         </div>
 
         <div class="filter-container">
@@ -331,7 +322,7 @@
                 <button class="filter-btn btn-bronze" onclick="filterTier('bronze')">BRONZE // 青銅級</button>
             </div>
         </div>
-        <div class="search-box"><input type="text" id="searchInput" oninput="searchPilot()" placeholder="搜尋 ID、姓名或常駐地..."></div>
+        <div class="search-box"><input type="text" id="searchInput" oninput="searchPilot()" placeholder="搜尋獵人執照號碼、姓名或常駐地..."></div>
     </div>
 
     <div class="ladder-wrapper">
@@ -416,7 +407,6 @@
                 const barWidth = Math.min(100, (p.score / 420) * 100);
                 const atField = ((p.score / 4.5) + 12).toFixed(1);
                 
-                // 獵人稱號排序（跨越組別的排序）
                 let globalRank = i + 1;
                 let evaluation = "";
                 
@@ -433,7 +423,8 @@
                 }
 
                 const latestHistory = p.history.length > 0 ? p.history[p.history.length - 1] : "N/A";
-                const latestCup = p.history.length > 0 ? `CUP-${String(p.history.length).padStart(2,'0')}` : "NO DATA";
+                // 最新一筆紀錄替換
+                const latestMission = p.history.length > 0 ? `MISSION` : "NO DATA";
                 
                 let displayTierName = p.tier;
                 if (tierKey === 'platinum') displayTierName = "白金級";
@@ -466,7 +457,7 @@
                         <div class="card-info">ID: ${p.id} ${p.team !== '-' ? `| 常駐地: <span class="team-badge" style="border-color:${teamColor}; color:${teamColor}; box-shadow: 0 0 8px ${teamColor}40;">${p.team}</span>` : ''}</div>
                         
                         <div class="card-latest-row">
-                            <span style="color:var(--eva-green)">LAST // ${latestCup}</span>
+                            <span style="color:var(--eva-green)">LATEST // ${latestMission}</span>
                             <span class="result-highlight">${resultText}</span>
                         </div>
 
@@ -575,14 +566,30 @@
             
             let luxuryClass = "rank-c";
             let rankCode = "c";
-            let rankLabel = "C-RANK // UNIT";
 
             const tierKey = p.tier.includes("白金") ? "platinum" : p.tier.includes("黃金") ? "gold" : p.tier.includes("白銀") ? "silver" : "bronze";
 
-            if (tierKey === 'platinum') { luxuryClass = "rank-ssr"; rankCode = "ssr"; rankLabel = "PLATINUM // 白金級"; }
-            else if (tierKey === 'gold') { luxuryClass = "rank-sr"; rankCode = "sr"; rankLabel = "GOLD // 黃金級"; }
-            else if (tierKey === 'silver') { luxuryClass = "rank-a"; rankCode = "a"; rankLabel = "SILVER // 白銀級"; }
-            else { luxuryClass = "rank-b"; rankCode = "b"; rankLabel = "BRONZE // 青銅級"; }
+            if (tierKey === 'platinum') { luxuryClass = "rank-ssr"; rankCode = "ssr"; }
+            else if (tierKey === 'gold') { luxuryClass = "rank-sr"; rankCode = "sr"; }
+            else if (tierKey === 'silver') { luxuryClass = "rank-a"; rankCode = "a"; }
+            else { luxuryClass = "rank-b"; rankCode = "b"; }
+
+            // 計算跨組別全局排名，賦予獵人稱號作為卡片上端分級
+            const totalPilots = globalPilots.length;
+            const globalRank = globalPilots.findIndex(pilot => pilot.id === p.id) + 1;
+            let rankLabel = "";
+            
+            if (globalRank <= 12) {
+                rankLabel = "ZODIAC // 12支獵人";
+            } else if (globalRank <= totalPilots * 0.25) {
+                rankLabel = "3-STAR // 三星獵人";
+            } else if (globalRank <= totalPilots * 0.50) {
+                rankLabel = "2-STAR // 二星獵人";
+            } else if (globalRank <= totalPilots * 0.80) {
+                rankLabel = "1-STAR // 一星獵人";
+            } else {
+                rankLabel = "PRO // 職業獵人";
+            }
 
             const stars = calculateStars(p.score); 
             const s = p.score;
@@ -635,8 +642,8 @@
 
                         <div class="card-history-box">
                             <div class="history-label">
-                                <span>BATTLE LOG</span>
-                                <span>REC: ${p.history.length}</span>
+                                <span>MISSION LOG</span>
+                                <span>CLEARED: ${p.history.length}</span>
                             </div>
                             <div class="history-list-content">
                                 ${historyHTML}
