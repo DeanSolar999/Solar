@@ -13,10 +13,10 @@
             --eva-green: #00e676; 
             --eva-orange: #ff4d4d; 
             
-            --color-platinum: #00e5ff;
-            --color-gold: #ffd700;
-            --color-silver: #ff4444; 
-            --color-bronze: #00e676; 
+            --color-platinum: #00e5ff; /* 藍色 */
+            --color-gold: #ffd700;     /* 金色 */
+            --color-silver: #ff4444;   /* 紅色 */
+            --color-bronze: #00e676;   /* 綠色 */
             --glass-bg: rgba(20, 26, 35, 0.95); 
         }
 
@@ -36,7 +36,6 @@
             background: var(--eva-dark-bg); z-index: 10000; align-items: center; justify-content: center; flex-direction: column;
         }
         .loader-text { font-size: 0; animation: blink 0.5s infinite alternate; }
-        /* 替換載入文字 */
         .loader-text::after { content: "ACCESSING CONFIDENTIAL DATA..."; font-size: 2rem; font-family: 'Orbitron', sans-serif; color: var(--eva-purple); }
         @keyframes blink { from { opacity: 1; } to { opacity: 0.3; } }
 
@@ -78,10 +77,8 @@
         
         .deco-corner-text { position: absolute; font-family: 'Orbitron', monospace; font-size: 0; color: var(--eva-orange); opacity: 0.8; line-height: 1.2; }
         .deco-tl { top: 8px; left: 15px; border-left: 2px solid var(--eva-purple); padding-left: 6px; }
-        /* 替換左上角裝飾 */
         .deco-tl::after { content: "V5\nSECURE"; font-size: 0.5rem; color: var(--eva-purple); display: block; }
         .deco-br { bottom: 8px; right: 15px; border-right: 2px solid var(--eva-green); padding-right: 6px; text-align: right; }
-        /* 替換右上角裝飾 */
         .deco-br::after { content: "NEN RADAR\nON"; font-size: 0.5rem; color: var(--eva-green); display: block; }
 
         .filter-container { width: 100%; overflow-x: auto; padding: 5px 10px; text-align: center; }
@@ -110,7 +107,6 @@
 
         .ladder-wrapper { max-width: 1200px; margin: 0 auto; padding: 10px 5px; position:relative; z-index:1; width: 100%; }
         .ladder-wrapper > div:first-child { font-size: 0 !important; }
-        /* 替換列表上方分隔條文字 */
         .ladder-wrapper > div:first-child::after { content: "審查委員會機密評估 // COMMITTEE CONFIDENTIAL LOG"; font-size: 0.65rem; color: #fff; }
 
         table { width: 100%; display: block; }
@@ -203,50 +199,140 @@
             color: #888; font-family: 'Noto Sans TC', sans-serif;
         }
 
+        /* === Modal 彈出視窗與全螢幕氣場背景特效 === */
         .modal { 
             display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; 
             backdrop-filter: blur(8px); align-items: center; justify-content: center; 
-            transition: background 0.5s ease;
+            background: rgba(11, 14, 23, 0.85); overflow: hidden; transition: background 0.3s;
         }
 
-        .modal[data-rank="ssr"] { background: radial-gradient(circle at 50% 30%, rgba(255, 215, 0, 0.4) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(0, 229, 255, 0.3) 0%, transparent 30%), radial-gradient(circle at 20% 80%, rgba(0, 230, 118, 0.3) 0%, transparent 40%), #0b0e17; }
-        .modal[data-rank="sr"] { background: linear-gradient(rgba(0, 229, 255, 0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 229, 255, 0.1) 1px, transparent 1px), radial-gradient(circle at center, rgba(0, 20, 40, 0.8) 0%, #0b0e17 100%); background-size: 40px 40px, 40px 40px, 100% 100%; }
-        .modal[data-rank="s"] { background: repeating-conic-gradient(from 0deg, rgba(0, 229, 255, 0.05) 0deg, transparent 10deg, rgba(0, 229, 255, 0.05) 20deg), radial-gradient(circle at center, transparent 0%, #0b0e17 80%); }
-        .modal[data-rank="a"] { background: repeating-radial-gradient(circle at center, transparent 0, transparent 49px, rgba(0, 230, 118, 0.1) 50px), radial-gradient(circle at center, rgba(0, 30, 20, 0.5) 0%, #0b0e17 100%); }
-        .modal[data-rank="b"] { background: repeating-linear-gradient(45deg, rgba(255, 77, 77, 0.05), rgba(255, 77, 77, 0.05) 10px, transparent 10px, transparent 20px), linear-gradient(to bottom, #111, #0b0e17); }
-        .modal[data-rank="c"] { background: rgba(11, 14, 23, 0.98); }
+        /* 全螢幕特效容器 */
+        .modal-fx {
+            position: absolute; inset: 0; pointer-events: none; z-index: 0;
+            display: flex; align-items: center; justify-content: center; overflow: hidden;
+        }
+        .modal-fx > div { position: absolute; }
 
+        /* 💎 PLATINUM (SSR) 背景 - SVG 魔法陣與藍色光球爆發 */
+        .bg-platinum { background: rgba(5, 10, 25, 0.9); }
+        .bg-platinum .fx-layer-1 {
+            width: 800px; height: 800px;
+            background: url('data:image/svg+xml;utf8,<svg viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg"><circle cx="300" cy="300" r="280" fill="none" stroke="%2300e5ff" stroke-width="2" stroke-dasharray="15 15"/><circle cx="300" cy="300" r="260" fill="none" stroke="%2300e5ff" stroke-width="1"/><polygon points="300,40 525,450 75,450" fill="none" stroke="%2300e5ff" stroke-width="2"/><polygon points="300,560 75,150 525,150" fill="none" stroke="%2300e5ff" stroke-width="2"/><circle cx="300" cy="300" r="130" fill="none" stroke="%2300e5ff" stroke-width="4" stroke-dasharray="5 20"/><circle cx="300" cy="300" r="100" fill="none" stroke="%2300e5ff" stroke-width="1"/></svg>') no-repeat center center;
+            background-size: contain; opacity: 0.5;
+            animation: spinReverse 30s linear infinite;
+        }
+        .bg-platinum .fx-layer-2 {
+            inset: -50%;
+            background-image: radial-gradient(circle at center, rgba(0, 229, 255, 0.8) 2px, transparent 3px);
+            background-size: 100px 100px;
+            animation: starBurst 3s ease-out infinite;
+        }
+        .bg-platinum .fx-layer-3 {
+            inset: -50%;
+            background-image: radial-gradient(circle at center, rgba(0, 229, 255, 0.6) 3px, transparent 4px);
+            background-size: 150px 150px; background-position: 50px 50px;
+            animation: starBurst 4s ease-out infinite 1.5s; opacity: 0;
+        }
+
+        /* 🥇 GOLD (SR) 背景 - 金色漣漪擴散 */
+        .bg-gold { background: rgba(20, 15, 0, 0.9); }
+        .bg-gold .fx-layer-1, .bg-gold .fx-layer-2, .bg-gold .fx-layer-3 {
+            width: 100px; height: 100px; border-radius: 50%;
+            border: 2px solid var(--color-gold);
+            animation: rippleEffect 4s ease-out infinite; opacity: 0;
+        }
+        .bg-gold .fx-layer-2 { animation-delay: 1.33s; }
+        .bg-gold .fx-layer-3 { animation-delay: 2.66s; }
+
+        /* 🥈 SILVER (S) 背景 - 紅色幾何碎片漂浮 */
+        .bg-silver { background: rgba(20, 0, 0, 0.9); }
+        .bg-silver .fx-layer-1 {
+            inset: -50%;
+            background-image: url('data:image/svg+xml;utf8,<svg width="400" height="400" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg"><polygon points="50,50 70,30 90,60" fill="rgba(255,68,68,0.4)"/><polygon points="200,150 240,140 220,180" fill="rgba(255,68,68,0.2)"/><polygon points="350,300 370,260 390,320" fill="rgba(255,68,68,0.3)"/><polygon points="100,350 120,320 160,340 140,380" fill="rgba(255,68,68,0.15)"/></svg>');
+            background-size: 300px 300px;
+            animation: shardDrift 15s linear infinite;
+        }
+        .bg-silver .fx-layer-2 {
+            inset: -50%;
+            background-image: url('data:image/svg+xml;utf8,<svg width="400" height="400" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg"><polygon points="150,50 170,30 190,60" fill="rgba(255,68,68,0.2)"/><polygon points="300,150 340,140 320,180" fill="rgba(255,68,68,0.4)"/><polygon points="50,300 70,260 90,320" fill="rgba(255,68,68,0.15)"/></svg>');
+            background-size: 400px 400px;
+            animation: shardDriftReverse 20s linear infinite;
+        }
+
+        /* 🥉 BRONZE (A/B) 背景 - 綠色十六進位數字雨 */
+        .bg-bronze { background: #020a05; }
+        .bg-bronze .fx-layer-1 {
+            inset: -50%;
+            background-image: url('data:image/svg+xml;utf8,<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><text x="10" y="20" fill="%2300e676" fill-opacity="0.2" font-family="monospace" font-size="14">0A</text><text x="10" y="40" fill="%2300e676" fill-opacity="0.5" font-family="monospace" font-size="14">F1</text><text x="10" y="60" fill="%2300e676" fill-opacity="0.1" font-family="monospace" font-size="14">B4</text><text x="80" y="100" fill="%2300e676" fill-opacity="0.2" font-family="monospace" font-size="14">C7</text><text x="80" y="120" fill="%2300e676" fill-opacity="0.5" font-family="monospace" font-size="14">9E</text><text x="80" y="140" fill="%2300e676" fill-opacity="0.1" font-family="monospace" font-size="14">2D</text><text x="140" y="50" fill="%2300e676" fill-opacity="0.1" font-family="monospace" font-size="14">A8</text><text x="140" y="70" fill="%2300e676" fill-opacity="0.2" font-family="monospace" font-size="14">3F</text><text x="140" y="90" fill="%2300e676" fill-opacity="0.5" font-family="monospace" font-size="14">6C</text></svg>');
+            background-size: 200px 200px;
+            animation: matrixRain1 2s linear infinite;
+        }
+        .bg-bronze .fx-layer-2 {
+            inset: -50%;
+            background-image: url('data:image/svg+xml;utf8,<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg"><text x="40" y="60" fill="%2300e676" fill-opacity="0.15" font-family="monospace" font-size="18">7C</text><text x="40" y="80" fill="%2300e676" fill-opacity="0.4" font-family="monospace" font-size="18">D9</text><text x="40" y="100" fill="%2300e676" fill-opacity="0.1" font-family="monospace" font-size="18">5F</text><text x="150" y="200" fill="%2300e676" fill-opacity="0.15" font-family="monospace" font-size="18">92</text><text x="150" y="220" fill="%2300e676" fill-opacity="0.4" font-family="monospace" font-size="18">B3</text><text x="150" y="240" fill="%2300e676" fill-opacity="0.1" font-family="monospace" font-size="18">4E</text><text x="250" y="120" fill="%2300e676" fill-opacity="0.1" font-family="monospace" font-size="18">0F</text><text x="250" y="140" fill="%2300e676" fill-opacity="0.4" font-family="monospace" font-size="18">A1</text><text x="250" y="160" fill="%2300e676" fill-opacity="0.15" font-family="monospace" font-size="18">B4</text></svg>');
+            background-size: 300px 300px;
+            animation: matrixRain2 3s linear infinite;
+        }
+        .bg-bronze .fx-layer-3 {
+            inset: 0;
+            background: linear-gradient(to bottom, rgba(2,10,5,0.9) 0%, transparent 20%, transparent 80%, rgba(2,10,5,0.9) 100%);
+            z-index: 5; pointer-events: none;
+        }
+
+        /* 背景特效動畫定義 */
+        @keyframes spinReverse { from { transform: rotate(360deg); } to { transform: rotate(0deg); } }
+        @keyframes starBurst { 0% { transform: scale(0.2); opacity: 1; } 100% { transform: scale(2.5); opacity: 0; } }
+        @keyframes rippleEffect { 0% { transform: scale(1); opacity: 0.8; border-width: 4px; box-shadow: 0 0 30px var(--color-gold), inset 0 0 20px var(--color-gold); } 100% { transform: scale(12); opacity: 0; border-width: 1px; box-shadow: 0 0 0 var(--color-gold), inset 0 0 0 var(--color-gold); } }
+        @keyframes shardDrift { from { transform: translate(0, 0) rotate(0deg); } to { transform: translate(100px, -100px) rotate(10deg); } }
+        @keyframes shardDriftReverse { from { transform: translate(0, 0) rotate(0deg); } to { transform: translate(-100px, 100px) rotate(-10deg); } }
+        @keyframes matrixRain1 { from { background-position: 0 0px; } to { background-position: 0 200px; } }
+        @keyframes matrixRain2 { from { background-position: 0 0px; } to { background-position: 0 300px; } }
+
+        /* --- 內部卡片本體設計 --- */
         .modal-card { 
             width: 320px; height: 620px; background: linear-gradient(145deg, #1a1e29, #0b0e17); 
             border-radius: 15px; position: relative; box-shadow: 0 0 50px rgba(0,0,0,0.8); 
             overflow: hidden; display: flex; flex-direction: column; 
-            border: 2px solid #444; transform-style: preserve-3d; 
+            border: 2px solid #444; transform-style: preserve-3d; z-index: 10;
             animation: cardEntrance 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
         }
 
-        .modal-card.rank-ssr { border: 3px solid #ffd700; box-shadow: 0 0 60px rgba(255, 215, 0, 0.5); }
+        /* 💎 PLATINUM // 白金級 (SSR) 內部特效 */
+        .modal-card.rank-ssr { border: 3px solid var(--color-platinum); box-shadow: 0 0 60px rgba(0, 229, 255, 0.5); }
         .modal-card.rank-ssr .card-visual-area::before {
             content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
-            background: linear-gradient(120deg, transparent, rgba(255,255,255,0.3), transparent); animation: sheen 2s infinite; z-index: 10; pointer-events: none;
+            background: linear-gradient(120deg, transparent, rgba(255,255,255,0.4), transparent); 
+            animation: sheen 2s infinite; z-index: 10; pointer-events: none;
         }
-        .modal-card.rank-ssr::after { content: '👑'; font-size: 150px; position: absolute; top: 10%; left: 50%; transform: translateX(-50%) rotate(-10deg); opacity: 0.1; z-index: 0; filter: drop-shadow(0 0 10px gold); }
-        .modal-card.rank-sr { border: 2px solid var(--color-platinum); box-shadow: 0 0 40px rgba(0, 229, 255, 0.4); }
-        .modal-card.rank-sr .card-visual-area { background-image: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0, 229, 255, 0.1) 3px); background-size: 100% 4px; animation: gridMove 10s linear infinite; }
-        .modal-card.rank-sr::after { content: '💠'; font-size: 150px; position: absolute; top: 10%; left: 50%; transform: translateX(-50%); opacity: 0.1; z-index: 0; }
-        .modal-card.rank-s { border: 2px solid var(--eva-purple); box-shadow: 0 0 30px rgba(0, 229, 255, 0.3); }
-        .modal-card.rank-s .card-visual-area::after { content: ''; position: absolute; inset: 0; background: url('data:image/svg+xml;utf8,<svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10 0l2.5 7.5L20 10l-7.5 2.5L10 20l-2.5-7.5L0 10l7.5-2.5z" fill="%2300e5ff" fill-opacity="0.1"/></svg>'); opacity: 0.5; }
-        .modal-card.rank-s::after { content: '★'; font-size: 150px; position: absolute; top: 10%; left: 50%; transform: translateX(-50%); opacity: 0.1; z-index: 0; color: var(--eva-purple); }
-        .modal-card.rank-a { border: 1px solid var(--eva-green); box-shadow: 0 0 20px rgba(0, 230, 118, 0.2); }
-        .modal-card.rank-a .card-visual-area { background: radial-gradient(circle, transparent 20%, rgba(0, 230, 118, 0.05) 21%, transparent 22%); background-size: 50px 50px; }
-        .modal-card.rank-a::after { content: '❮'; font-size: 150px; position: absolute; top: 10%; left: 50%; transform: translateX(-50%) rotate(90deg); opacity: 0.1; z-index: 0; color: var(--eva-green); }
-        .modal-card.rank-b { border: 1px solid var(--eva-orange); box-shadow: 0 0 10px rgba(255, 77, 77, 0.2); }
-        .modal-card.rank-b::after { content: '●'; font-size: 150px; position: absolute; top: 10%; left: 50%; transform: translateX(-50%); opacity: 0.05; z-index: 0; color: var(--eva-orange); }
-        .modal-card.rank-c { border: 1px solid #555; background: #111; }
+
+        /* 🥇 GOLD // 黃金級 (SR) 內部特效 */
+        .modal-card.rank-sr { border: 2px solid var(--color-gold); box-shadow: 0 0 40px rgba(255, 215, 0, 0.4); }
+        .modal-card.rank-sr .card-visual-area { 
+            background-image: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255, 215, 0, 0.1) 3px); 
+            background-size: 100% 4px; 
+        }
+
+        /* 🥈 SILVER // 白銀級 (S) 內部特效 */
+        .modal-card.rank-s { border: 2px solid var(--color-silver); box-shadow: 0 0 30px rgba(255, 77, 77, 0.3); }
+        .modal-card.rank-s .card-visual-area::after { 
+            content: ''; position: absolute; inset: 0; 
+            background: url('data:image/svg+xml;utf8,<svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10 0l2.5 7.5L20 10l-7.5 2.5L10 20l-2.5-7.5L0 10l7.5-2.5z" fill="%23ff4d4d" fill-opacity="0.1"/></svg>'); 
+            animation: scanline 4s linear infinite; pointer-events: none;
+        }
+
+        /* 🥉 BRONZE // 青銅級 (A/B) 內部特效 */
+        .modal-card.rank-a, .modal-card.rank-b { border: 2px dashed var(--color-bronze); box-shadow: 0 0 20px rgba(0, 230, 118, 0.1); }
+        .modal-card.rank-a .card-visual-area, .modal-card.rank-b .card-visual-area { 
+            background: radial-gradient(circle, transparent 20%, rgba(0, 230, 118, 0.05) 21%, transparent 22%); 
+            background-size: 40px 40px; 
+        }
 
         @keyframes sheen { 0% { transform: translate(-100%, -100%) rotate(45deg); } 100% { transform: translate(100%, 100%) rotate(45deg); } }
+        @keyframes scanline { 0% { background-position: 0 0; } 100% { background-position: 0 100%; } }
+        @keyframes cardEntrance { 0% { opacity: 0; transform: scale(0.8) translateY(30px); } 100% { opacity: 1; transform: scale(1) translateY(0); } }
 
         .close-modal {
-            position: absolute; top: 0; right: 0; width: 40px; height: 40px;
+            position: absolute; top: 18px; right: 0; width: 40px; height: 40px;
             background: rgba(255, 255, 255, 0.1); border-left: 1px solid rgba(255, 255, 255, 0.3); border-bottom: 1px solid rgba(255, 255, 255, 0.3);
             display: flex; align-items: center; justify-content: center; font-family: sans-serif; font-size: 1.5rem; color: #fff;
             cursor: pointer; z-index: 100; transition: 0.2s; border-bottom-left-radius: 5px;
@@ -264,8 +350,6 @@
         .card-visual-area { flex: 1; position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden; background: radial-gradient(circle at center, rgba(255,255,255,0.05) 0%, transparent 70%); }
         .cartoon-avatar { width: auto; height: 80%; z-index: 10; filter: drop-shadow(0 5px 15px rgba(0,0,0,0.6)); animation: bob 3s ease-in-out infinite; }
         @keyframes bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
-        .card-radar-bg { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 250px; height: 250px; opacity: 0.3; z-index: 1; animation: radarRotate 20s linear infinite; }
-        @keyframes radarRotate { from { transform: translate(-50%, -50%) rotate(0deg); } to { transform: translate(-50%, -50%) rotate(360deg); } }
 
         .battle-type-badge {
             position: absolute; top: 12px; left: 12px; background: #000; border: 1px solid var(--eva-purple);
@@ -423,7 +507,6 @@
                 }
 
                 const latestHistory = p.history.length > 0 ? p.history[p.history.length - 1] : "N/A";
-                // 最新一筆紀錄替換
                 const latestMission = p.history.length > 0 ? `MISSION` : "NO DATA";
                 
                 let displayTierName = p.tier;
@@ -441,8 +524,7 @@
                 tr.dataset.tier = tierKey;
                 tr.dataset.json = JSON.stringify({...p, rank, tierKey});
                 
-                const currentRank = rank;
-                tr.onclick = () => openModal(p, currentRank);
+                tr.onclick = () => openModal(p, globalRank);
 
                 tr.innerHTML = `
                     <td class="col-pilot">
@@ -561,24 +643,38 @@
             };
         }
 
-        function openModal(p, rank) {
+        function openModal(p, globalRank) {
             const settings = getBattleSettings(p.id);
             
             let luxuryClass = "rank-c";
-            let rankCode = "c";
+            let topTag = ""; 
+            let bgClass = ""; 
 
             const tierKey = p.tier.includes("白金") ? "platinum" : p.tier.includes("黃金") ? "gold" : p.tier.includes("白銀") ? "silver" : "bronze";
 
-            if (tierKey === 'platinum') { luxuryClass = "rank-ssr"; rankCode = "ssr"; }
-            else if (tierKey === 'gold') { luxuryClass = "rank-sr"; rankCode = "sr"; }
-            else if (tierKey === 'silver') { luxuryClass = "rank-a"; rankCode = "a"; }
-            else { luxuryClass = "rank-b"; rankCode = "b"; }
+            if (tierKey === 'platinum') { 
+                luxuryClass = "rank-ssr"; 
+                topTag = "CLASSIFIED // TOP SECRET"; 
+                bgClass = "bg-platinum"; 
+            }
+            else if (tierKey === 'gold') { 
+                luxuryClass = "rank-sr"; 
+                topTag = "PRIORITY // FIRST CLASS"; 
+                bgClass = "bg-gold"; 
+            }
+            else if (tierKey === 'silver') { 
+                luxuryClass = "rank-s"; 
+                topTag = "TACTICAL // RESERVE"; 
+                bgClass = "bg-silver"; 
+            }
+            else { 
+                luxuryClass = "rank-b"; 
+                topTag = "CALIBRATING // TRAINEE"; 
+                bgClass = "bg-bronze"; 
+            }
 
-            // 計算跨組別全局排名，賦予獵人稱號作為卡片上端分級
             const totalPilots = globalPilots.length;
-            const globalRank = globalPilots.findIndex(pilot => pilot.id === p.id) + 1;
             let rankLabel = "";
-            
             if (globalRank <= 12) {
                 rankLabel = "ZODIAC // 12支獵人";
             } else if (globalRank <= totalPilots * 0.25) {
@@ -594,8 +690,6 @@
             const stars = calculateStars(p.score); 
             const s = p.score;
             const attrs = [Math.min(99, 60+(s%30)), Math.min(99, 50+(s%40)), Math.min(99, 70+(s%20)), Math.min(99, 55+(s%35))];
-
-            const currentTierName = p.tier.split(' ')[0];
 
             let historyHTML = "";
             if (p.history && p.history.length > 0) {
@@ -617,12 +711,20 @@
             const teamColor = getTeamColor(p.team);
 
             const modal = document.getElementById("playerModal");
-            modal.dataset.rank = rankCode;
+            modal.className = `modal ${bgClass}`; 
 
             const modalHTML = `
+                <div class="modal-fx">
+                    <div class="fx-layer-1"></div>
+                    <div class="fx-layer-2"></div>
+                    <div class="fx-layer-3"></div>
+                </div>
+
                 <div class="modal-card ${luxuryClass}" id="tiltCard">
-                    <div class="close-modal" onclick="closeModal()">✕</div>
-                    <div class="card-header-bar">
+                    <div style="background: var(--color-${tierKey}); color: #000; font-size: 0.5rem; font-weight: 900; text-align: center; padding: 2px; position: absolute; top: 0; left: 0; width: 100%; z-index: 100;">${topTag}</div>
+                    
+                    <div class="close-modal" onclick="closeModal()" style="top: 15px;">✕</div>
+                    <div class="card-header-bar" style="margin-top: 15px;">
                         <span class="header-stars">${stars}</span>
                         <span class="header-tier-text">${rankLabel}</span>
                     </div>
@@ -630,7 +732,6 @@
                         <div class="battle-type-badge" style="border-color:${settings.type.color}; color:${settings.type.color}">${settings.type.name}</div>
                         <div class="pilot-title">"${settings.title}"</div>
                         <img class="cartoon-avatar" src="${settings.imageUrl}" alt="Mecha Unit">
-                        <div class="card-radar-bg" id="radarChart"></div>
                     </div>
                     <div class="card-info-area">
                         <div class="info-name">${p.name}</div>
@@ -669,24 +770,10 @@
                 card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg)`;
             });
 
-            drawRadar(p.score);
             const scoreEl = document.getElementById("mScore");
             let start = 0; const end = p.score;
             function animateScore() { start += Math.ceil((end-start)/10); scoreEl.innerText = start; if(start < end) requestAnimationFrame(animateScore); }
             animateScore();
-        }
-
-        function drawRadar(score) {
-            const container = document.getElementById("radarChart");
-            if(!container) return;
-            const size = 250, center = size/2, radius = 90;
-            const stats = [Math.min(1, 0.5+(score%20)/40+0.2), Math.min(1, 0.5+(score%15)/35+0.2), Math.min(1, 0.5+(score%18)/40+0.2), Math.min(1, 0.5+(score%22)/45+0.2), Math.min(1, 0.5+(score%12)/30+0.2), Math.min(1, 0.5+(score%25)/50+0.2)];
-            const angles = [0, 60, 120, 180, 240, 300];
-            const points = angles.map((a, i) => { const rad = (a-90)*Math.PI/180; return `${center+radius*stats[i]*Math.cos(rad)},${center+radius*stats[i]*Math.sin(rad)}`; }).join(" ");
-            let svgHTML = `<svg width="100%" height="100%" viewBox="0 0 ${size} ${size}">`;
-            [1, 0.5].forEach(s => { const p = angles.map(a => `${center+radius*s*Math.cos((a-90)*Math.PI/180)},${center+radius*s*Math.sin((a-90)*Math.PI/180)}`).join(" "); svgHTML += `<polygon points="${p}" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="1" />`; });
-            svgHTML += `<polygon points="${points}" fill="rgba(0, 229, 255, 0.4)" stroke="var(--eva-purple)" stroke-width="2" /></svg>`;
-            container.innerHTML = svgHTML;
         }
 
         function closeModal() { document.getElementById("playerModal").style.display = "none"; }
