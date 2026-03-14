@@ -89,11 +89,13 @@
         }
         .filter-container::-webkit-scrollbar { display: none; /* Chrome, Safari, Opera */ }
         
-        .filter-group { display: inline-flex; justify-content: center; gap: 10px; white-space: nowrap; padding-bottom: 5px; margin: 0 auto; }
+        .filter-group { display: inline-flex; justify-content: center; gap: 8px; white-space: nowrap; padding-bottom: 5px; margin: 0 auto; }
+        
+        /* 調整：分組按鍵縮小 */
         .filter-btn {
             background: rgba(255,255,255,0.05); border: 1px solid #444; color: #888; 
-            padding: 10px 15px; cursor: pointer; font-size: 0.75rem; border-radius: 2px; transition: 0.2s;
-            flex: 0 0 auto; min-width: 90px; text-align: center; 
+            padding: 6px 12px; cursor: pointer; font-size: 0.65rem; border-radius: 2px; transition: 0.2s;
+            flex: 0 0 auto; min-width: 75px; text-align: center; 
             font-family: 'Orbitron', 'Noto Sans TC', sans-serif; font-weight: 700; letter-spacing: 1px;
         }
         .filter-btn.active { color: #000 !important; font-weight: 900; transform: scale(1.02); border: none; }
@@ -103,10 +105,12 @@
         .btn-bronze.active { background: var(--color-bronze); box-shadow: 0 0 10px var(--color-bronze); }
 
         .search-box { display: flex; justify-content: center; padding: 5px 15px; }
+        
+        /* 調整：搜尋欄位縮小 */
         #searchInput {
             background: rgba(0,0,0,0.6); border: 1px solid var(--eva-purple);
-            color: #fff; padding: 12px; width: 100%; max-width: 600px;
-            text-align: center; border-radius: 30px; font-size: 16px;
+            color: #fff; padding: 8px 15px; width: 100%; max-width: 400px;
+            text-align: center; border-radius: 20px; font-size: 14px;
             outline: none; transition: 0.3s;
             font-family: 'Noto Sans TC', sans-serif;
         }
@@ -774,7 +778,7 @@
 
             const card = document.getElementById("tiltCard");
             
-            // 優化：針對手機裝置進行觸控降級，僅在支援 hover 的裝置上啟用 3D 傾斜
+            // 只有支援 hover 的設備 (如電腦滑鼠) 才會啟用 3D 傾斜特效
             if (window.matchMedia("(hover: hover)").matches) {
                 modal.addEventListener("mousemove", (e) => {
                     const rect = card.getBoundingClientRect();
@@ -795,7 +799,7 @@
 
         function closeModal() { document.getElementById("playerModal").style.display = "none"; }
 
-        // 優化：加入點擊背景空白處即可關閉卡片的事件
+        // 點擊背景空白處即可關閉卡片
         document.getElementById("playerModal").addEventListener("click", function(e) {
             if (!e.target.closest(".modal-card")) {
                 closeModal();
