@@ -81,7 +81,14 @@
         .deco-br { bottom: 8px; right: 15px; border-right: 2px solid var(--eva-green); padding-right: 6px; text-align: right; }
         .deco-br::after { content: "NEN RADAR\nON"; font-size: 0.5rem; color: var(--eva-green); display: block; }
 
-        .filter-container { width: 100%; overflow-x: auto; padding: 5px 10px; text-align: center; }
+        /* 優化：隱藏橫向捲軸 */
+        .filter-container { 
+            width: 100%; overflow-x: auto; padding: 5px 10px; text-align: center; 
+            -ms-overflow-style: none; /* IE and Edge */
+            scrollbar-width: none; /* Firefox */
+        }
+        .filter-container::-webkit-scrollbar { display: none; /* Chrome, Safari, Opera */ }
+        
         .filter-group { display: inline-flex; justify-content: center; gap: 10px; white-space: nowrap; padding-bottom: 5px; margin: 0 auto; }
         .filter-btn {
             background: rgba(255,255,255,0.05); border: 1px solid #444; color: #888; 
@@ -213,7 +220,7 @@
         }
         .modal-fx > div { position: absolute; }
 
-        /* 💎 PLATINUM (SSR) 背景 - SVG 魔法陣與藍色光球爆發 */
+        /* 💎 PLATINUM (SSR) 背景 */
         .bg-platinum { background: rgba(5, 10, 25, 0.9); }
         .bg-platinum .fx-layer-1 {
             width: 800px; height: 800px;
@@ -234,7 +241,7 @@
             animation: starBurst 4s ease-out infinite 1.5s; opacity: 0;
         }
 
-        /* 🥇 GOLD (SR) 背景 - 金色漣漪擴散 */
+        /* 🥇 GOLD (SR) 背景 */
         .bg-gold { background: rgba(20, 15, 0, 0.9); }
         .bg-gold .fx-layer-1, .bg-gold .fx-layer-2, .bg-gold .fx-layer-3 {
             width: 100px; height: 100px; border-radius: 50%;
@@ -244,7 +251,7 @@
         .bg-gold .fx-layer-2 { animation-delay: 1.33s; }
         .bg-gold .fx-layer-3 { animation-delay: 2.66s; }
 
-        /* 🥈 SILVER (S) 背景 - 紅色幾何碎片漂浮 */
+        /* 🥈 SILVER (S) 背景 */
         .bg-silver { background: rgba(20, 0, 0, 0.9); }
         .bg-silver .fx-layer-1 {
             inset: -50%;
@@ -259,7 +266,7 @@
             animation: shardDriftReverse 20s linear infinite;
         }
 
-        /* 🥉 BRONZE (A/B) 背景 - 綠色十六進位數字雨 */
+        /* 🥉 BRONZE (A/B) 背景 */
         .bg-bronze { background: #020a05; }
         .bg-bronze .fx-layer-1 {
             inset: -50%;
@@ -379,6 +386,12 @@
         .history-list-content::-webkit-scrollbar { width: 3px; }
         .history-list-content::-webkit-scrollbar-thumb { background: var(--eva-purple); }
         .history-tag { background: rgba(0, 229, 255, 0.1); border: 1px solid rgba(0, 229, 255, 0.3); color: var(--eva-purple); padding: 2px 8px; border-radius: 2px; font-size: 0.65rem; }
+
+        /* 優化：手機版專用標題與間距縮減 */
+        @media (max-width: 600px) {
+            .title-card { font-size: 1.8rem; }
+            .header-box { padding: 10px 0 8px 0; margin-bottom: 5px; }
+        }
     </style>
 </head>
 <body>
@@ -760,15 +773,19 @@
             modal.style.display = "flex";
 
             const card = document.getElementById("tiltCard");
-            modal.addEventListener("mousemove", (e) => {
-                const rect = card.getBoundingClientRect();
-                const x = e.clientX - rect.left; const y = e.clientY - rect.top;
-                const centerX = rect.width/2; const centerY = rect.height/2;
-                card.style.transform = `perspective(1000px) rotateX(${((y-centerY)/centerY)*-10}deg) rotateY(${((x-centerX)/centerX)*10}deg)`;
-            });
-            modal.addEventListener("mouseleave", () => {
-                card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg)`;
-            });
+            
+            // 優化：針對手機裝置進行觸控降級，僅在支援 hover 的裝置上啟用 3D 傾斜
+            if (window.matchMedia("(hover: hover)").matches) {
+                modal.addEventListener("mousemove", (e) => {
+                    const rect = card.getBoundingClientRect();
+                    const x = e.clientX - rect.left; const y = e.clientY - rect.top;
+                    const centerX = rect.width/2; const centerY = rect.height/2;
+                    card.style.transform = `perspective(1000px) rotateX(${((y-centerY)/centerY)*-10}deg) rotateY(${((x-centerX)/centerX)*10}deg)`;
+                });
+                modal.addEventListener("mouseleave", () => {
+                    card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg)`;
+                });
+            }
 
             const scoreEl = document.getElementById("mScore");
             let start = 0; const end = p.score;
@@ -777,6 +794,13 @@
         }
 
         function closeModal() { document.getElementById("playerModal").style.display = "none"; }
+
+        // 優化：加入點擊背景空白處即可關閉卡片的事件
+        document.getElementById("playerModal").addEventListener("click", function(e) {
+            if (!e.target.closest(".modal-card")) {
+                closeModal();
+            }
+        });
     </script>
 </body>
 </html>
