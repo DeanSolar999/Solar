@@ -1,9 +1,3 @@
-這是一份為你的**「曜日獵人星級考核總榜」**量身打造的 `README.md` 說明文件。我融入了你喜歡的《獵人 (Hunter x Hunter)》與《新世紀福音戰士 (EVA)》風格，同時保持了技術說明的清晰度，非常適合放在 GitHub 或交接給其他幹部參考！
-
-你可以直接複製以下 Markdown 格式的內容：
-
-***
-
 # 🌟 曜日獵人星級考核總榜 (HUNTER ASSOC. DB)
 > **MAGI SYSTEM VER.2.0 - TACTICAL OPS READY**
 
