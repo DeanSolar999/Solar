@@ -1,62 +1,58 @@
-# 曜日天梯榜 - MAGI SYSTEM (Solar Cup League) 🌐
+這是一份為你的**「曜日獵人星級考核總榜」**量身打造的 `README.md` 說明文件。我融入了你喜歡的《獵人 (Hunter x Hunter)》與《新世紀福音戰士 (EVA)》風格，同時保持了技術說明的清晰度，非常適合放在 GitHub 或交接給其他幹部參考！
 
-![Version](https://img.shields.io/badge/Version-2.0-blue)
-![Status](https://img.shields.io/badge/Status-TACTICAL__OPS__READY-success)
-![Tech Stack](https://img.shields.io/badge/Tech-HTML5%20|%20CSS3%20|%20Vanilla%20JS-orange)
+你可以直接複製以下 Markdown 格式的內容：
 
-「曜日天梯榜」是一個基於純前端技術打造的賽博龐克 / EVA 風格動態排行榜系統。系統可即時讀取 Google Sheets 資料，並透過專屬的「雙軌視覺系統」與「3D 戰術卡片」，將冰冷的試算表數據轉化為極具視覺張力的遊戲化天梯榜。
+***
+
+# 🌟 曜日獵人星級考核總榜 (HUNTER ASSOC. DB)
+> **MAGI SYSTEM VER.2.0 - TACTICAL OPS READY**
+
+這是一個專為「曜日羽球團」打造的專屬星級積分排行榜系統。結合了《獵人》的念能力階級設定與《EVA》MAGI 系統的賽博龐克（Cyberpunk）視覺風格。系統會自動讀取 Google 試算表（Google Sheets）的即時資料，將枯燥的羽球積分轉化為熱血的「獵人考核檔案」。
+
+## ✨ 核心特色 (Key Features)
+
+* **☁️ 雲端資料同步 (Cloud Sync):** 直接讀取 Google Sheets 發佈的 CSV 檔案，不需架設後端資料庫。更新表單，網頁即時生效。
+* **🎴 戰術級玩家卡片 (Tactical Player Cards):** 點擊玩家即可呼叫出精美的 3D 傾斜特效卡片（支援電腦版滑鼠互動）。
+* **💎 動態特效分級 (Dynamic Tier Visuals):** 依據白金 (SSR)、黃金 (SR)、白銀 (S)、青銅 (A/B) 給予不同的全螢幕氣場背景特效與光影渲染。
+* **🤖 專屬念能力生成 (Procedural Generation):** 根據每位玩家的專屬 ID，利用雜湊演算法（Hash）與 `DiceBear API`，自動隨機生成獨一無二的「機甲頭像」、「念能力系別」與「專屬稱號」。
+* **🔍 即時戰術雷達 (Real-time Search & Filter):** 支援按階級篩選，以及關鍵字（執照號碼、姓名、常駐地）即時搜尋。
+
+## 🛠️ 技術棧 (Tech Stack)
+
+* **前端:** 100% 純 HTML5, CSS3 (Glassmorphism, CSS Animations, CSS Variables), Vanilla JavaScript.
+* **資料解析:** `SheetJS (xlsx.js)` 用於解析從 Google 取回的 CSV 字串。
+* **頭像 API:** [DiceBear Bottts API](https://www.dicebear.com/styles/bottts) (機甲風格頭像)。
+* **字體:** Google Fonts (`Noto Sans TC` 思源黑體, `Orbitron` 科技字體)。
+
+## 📊 資料庫設定指南 (Database Setup)
+
+系統依賴 Google 試算表運作，請確保你的表單欄位符合以下順序（系統預設忽略第一列標題列）：
+
+| A欄 (ID) | B欄 (Name) | C欄 (Team) | D欄 (Tier) | E欄 (Score) | F欄以後 (History/Mission Log) |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| 獵人執照號碼 | 姓名/暱稱 | 常駐地 (如: 週一中壢) | 階級 (包含白金, 黃金等字眼) | 總積分 (純數字) | 參與過的賽事名稱或成績 |
+| 1001 | 阿定 | 星期一中壢 | 白金級 | 450 | 死滅回游 冠軍, 春季盃 四強 |
+| 1002 | 小安 | 星期四建國 | 白銀級 | 120 | 歲末神仙盃 八強 |
+
+### ⚠️ 重要：如何發佈 Google 試算表
+為了讓網頁能順利讀取資料，**必須將 Google 試算表發佈為 CSV 格式**：
+1. 打開你的 Google 試算表。
+2. 點擊左上角 `檔案 (File)` > `共用 (Share)` > `發佈到網路 (Publish to web)`。
+3. 連結類型選擇 `整份文件` 或 `特定工作表`。
+4. **【關鍵步驟】** 格式下拉選單請務必選擇 **`逗號分隔值 (.csv)`** (絕對不能選網頁/HTML)。
+5. 點擊「發佈」，並將獲得的連結替換到 HTML 檔案中 `<script>` 區塊的 `CSV_URL` 變數中。
+
+## 🎨 系統進階設定 (Customization)
+
+如果你想調整系統的氛圍或設定，可以修改 `<script>` 中的這兩個陣列：
+
+* **戰鬥系別 (`types`):** 目前為強化系、具現化系、變化系、操作系。可以自由新增其他屬性。
+* **隨機稱號 (`titles` & `titles2`):** 前綴詞與後綴詞。你可以加入更多羽球社群的內梗，例如「殺球的」、「掛網的」、「幻獸獵人」、「十二支」等，系統會自動幫玩家組合出超中二的稱號！
+
+## 📱 裝置支援 (Responsiveness)
+
+* 已針對行動裝置 (Mobile) 進行優化，隱藏不必要的捲軸並優化卡片點擊觸控範圍。
+* 電腦版 (Desktop) 支援游標懸停的 3D 視角卡片傾斜物理特效。
 
 ---
-
-## ✨ 核心特色 (Core Features)
-
-* **📡 雲端數據同步 (Live Data Sync)**：不需後端伺服器，直接解析已發布的 Google Sheets CSV 檔案，數據更新即時呈現。
-* **🛡️ 雙軌視覺系統 (Dual-Track Hierarchy)**：完美分離選手的「所屬量級 (Tier)」與「實力排名 (Rank)」，提供多層次的視覺回饋（詳見下方說明）。
-* **🎴 3D 戰術全息卡片 (3D Holographic Cards)**：點擊選手展開詳細數據卡片，支援滑鼠懸停 (Hover) 的 3D 傾斜透視效果。
-* **📊 動態能力雷達圖 (Procedural Radar Chart)**：根據選手積分，透過演算法動態生成六芒星能力雷達圖（ATK, DEF, SPD, TEC 等）。
-* **🤖 專屬機甲頭像 (Procedural Avatars)**：整合 Dicebear API，將選手 ID 進行 Hash 運算，自動為每位駕駛員生成獨一無二的像素機甲頭像。
-
----
-
-## 🎖️ 階級與視覺系統 (The Hierarchy System)
-
-為了提供極致的榮譽感與辨識度，本系統採用 **「雙軌視覺 (Tier vs. Rank)」** 設計：
-
-### 1. 分組量級 (Tier) - 決定卡片「邊框顏色」
-代表選手的報名量級與出身，顏色絕對固定，提供最直覺的清單分類。
-* **PLATINUM (白金級)**：科技藍 (`#00bfff`)
-* **GOLD (黃金級)**：榮耀金 (`#ffd700`)
-* **SILVER (白銀級)**：戰術紅 (`#ff0f4f`)
-* **BRONZE (青銅級)**：校準綠 (`#39ff14`)
-
-### 2. 實力排名 (Rank) - 決定「背景環境、材質與浮水印」
-代表選手在全體中的絕對實力，賦予不同等級的豪華視覺特效。
-
-| Rank 區間 | 稱號 (Title) | 背景環境 (Environment) | 專屬浮水印 (Watermark) | 視覺特效描述 |
-| :--- | :--- | :--- | :--- | :--- |
-| **1 - 3** | **SSR // LEGEND** | 黃金都心 | 👑 皇冠 | 滿版金色聚光燈，卡片表面附帶彩虹雷射流光動畫。 |
-| **4 - 10** | **SR // ELITE** | 核心機房 | 💠 鑽石 | 深藍色數據流背景，卡片附帶科技掃描線網格。 |
-| **11 - 30** | **S-RANK // ACE** | 紫電通道 | ★ 五角星 | 放射狀速度線背景，卡片表面帶有紫色蜂巢力場。 |
-| **31 - 60** | **A-RANK // MAIN** | 戰術雷達 | ❮ 軍階 V | 綠色雷達波擴散背景。 |
-| **61 - 100**| **B-RANK // SUP** | 工業區 | ● 圓形 | 橘色工業警示斜紋背景。 |
-| **100+** | **C-RANK // UNIT** | 靜默虛空 | 無 | 乾淨深黑背景，量產機標準配置。 |
-
----
-
-## 🚀 安裝與執行 (Installation & Setup)
-
-這是一個純前端 (Client-side) 的應用程式，**完全不需要安裝任何 Node.js 模組或建置工具 (No Build Process)**。
-
-1. **取得原始碼**：將 `index.html` 下載到您的電腦中。
-2. **直接執行**：使用任何現代瀏覽器 (Chrome, Edge, Safari, Firefox) 雙擊打開 `index.html` 即可運行。
-3. **部署上線**：您可以直接將此檔案部署到任何靜態網頁代管服務（如 GitHub Pages, Vercel, Netlify, 或 AWS S3）。
-
-### 📝 如何替換資料來源 (Data Source)
-
-目前的數據來自一份公開的 Google Sheets CSV。如果要換成您的數據：
-1. 準備一份 Google Sheets 試算表，欄位順序建議為：`ID` | `姓名` | `球團` | `分組` | `積分` | `歷史戰績1` | `歷史戰績2...`
-2. 在 Google Sheets 中點選 **檔案 -> 共用 -> 發布到網路**，選擇 **CSV** 格式並複製連結。
-3. 打開 `index.html`，找到第 523 行的 `CSV_URL` 變數：
-```javascript
-// 將此處的 URL 替換為您的 Google Sheets CSV 連結
-const CSV_URL = "您的_GOOGLE_SHEET_CSV_連結";
+*System Log: NEN RADAR ONLINE. ALL HUNTERS STANDBY.*
