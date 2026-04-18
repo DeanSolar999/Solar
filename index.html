@@ -442,19 +442,37 @@
             fetch(CSV_URL + "&t=" + Date.now()).then(res => res.arrayBuffer()).then(buffer => {
                 const csv = new TextDecoder("utf-8").decode(buffer);
                 const data = XLSX.utils.sheet_to_json(XLSX.read(csv, {type:'string'}).Sheets[XLSX.read(csv, {type:'string'}).SheetNames[0]], {header:1});
-                process(data.slice(1));
+                process(data);
             });
         };
 
-        function process(rows) {
-            globalPilots = rows.map(r => ({
-                id: String(r[0] || "?"), 
-                name: r[1] || "N/A", 
-                team: r[2] || "-",
-                tier: r[3] || "青銅級", 
-                score: parseInt(r[4]) || 0,
-                history: r.slice(5).filter(x => x && x !== "#N/A")
-            })).filter(p => p.name !== "N/A").sort((a,b) => b.score - a.score);
+        function process(data) {
+            const headers = data[0] || [];
+            const rows = data.slice(1);
+
+            globalPilots = rows.map(r => {
+                let historyList = [];
+                const maxCols = Math.max(headers.length, r.length);
+                for (let i = 5; i < maxCols; i++) {
+                    const record = r[i];
+                    if (record && String(record).trim() !== "" && String(record) !== "#N/A") {
+                        const eventName = headers[i] ? String(headers[i]).trim() : `MISSION-${String(i-4).padStart(2, '0')}`;
+                        historyList.push({
+                            event: eventName, 
+                            result: String(record).trim()
+                        });
+                    }
+                }
+
+                return {
+                    id: String(r[0] || "?"), 
+                    name: r[1] || "N/A", 
+                    team: r[2] || "-",
+                    tier: r[3] || "青銅級", 
+                    score: parseInt(r[4]) || 0,
+                    history: historyList
+                };
+            }).filter(p => p.name !== "N/A").sort((a,b) => b.score - a.score);
             
             render(globalPilots);
             document.getElementById('loadingOverlay').style.display = 'none';
@@ -523,8 +541,8 @@
                     evaluation = "PRO // 職業獵人";
                 }
 
-                const latestHistory = p.history.length > 0 ? p.history[p.history.length - 1] : "N/A";
-                const latestMission = p.history.length > 0 ? `MISSION` : "NO DATA";
+                const latestRecord = p.history.length > 0 ? p.history[p.history.length - 1] : null;
+                const latestMission = latestRecord ? latestRecord.event : "NO DATA";
                 
                 let displayTierName = p.tier;
                 if (tierKey === 'platinum') displayTierName = "白金級";
@@ -532,7 +550,12 @@
                 else if (tierKey === 'silver') displayTierName = "白銀級";
                 else if (tierKey === 'bronze') displayTierName = "青銅級";
 
-                const resultText = p.history.length > 0 ? `${displayTierName} ${latestHistory}` : "NO COMBAT DATA";
+                let resultText = "NO COMBAT DATA";
+                if (latestRecord) {
+                    let res = latestRecord.result;
+                    if (!res.includes('級')) res = `${displayTierName} ${res}`;
+                    resultText = res;
+                }
 
                 const teamColor = getTeamColor(p.team);
 
@@ -710,16 +733,15 @@
 
             let historyHTML = "";
             if (p.history && p.history.length > 0) {
-                historyHTML = p.history.map((record, index) => {
-                    const cupName = `CUP-${String(index + 1).padStart(2, '0')}`;
-                    let displayRecord = record;
+                historyHTML = p.history.map(recordObj => {
+                    let displayRecord = recordObj.result;
                     
                     if (!displayRecord.includes('級')) {
                         const tierNameToAdd = tierKey === 'platinum' ? '白金級' : tierKey === 'gold' ? '黃金級' : tierKey === 'silver' ? '白銀級' : '青銅級';
                         displayRecord = `${tierNameToAdd} ${displayRecord}`;
                     }
 
-                    return `<div class="history-tag">${cupName}: ${displayRecord}</div>`;
+                    return `<div class="history-tag">${recordObj.event}: ${displayRecord}</div>`;
                 }).join("");
             } else {
                 historyHTML = `<span style="color:#555; font-style:italic;">NO COMBAT RECORD FOUND</span>`;
@@ -778,7 +800,6 @@
 
             const card = document.getElementById("tiltCard");
             
-            // 只有支援 hover 的設備 (如電腦滑鼠) 才會啟用 3D 傾斜特效
             if (window.matchMedia("(hover: hover)").matches) {
                 modal.addEventListener("mousemove", (e) => {
                     const rect = card.getBoundingClientRect();
@@ -799,7 +820,6 @@
 
         function closeModal() { document.getElementById("playerModal").style.display = "none"; }
 
-        // 點擊背景空白處即可關閉卡片
         document.getElementById("playerModal").addEventListener("click", function(e) {
             if (!e.target.closest(".modal-card")) {
                 closeModal();
