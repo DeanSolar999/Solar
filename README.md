@@ -1,4 +1,4 @@
-# 🌟 曜日獵人星級考核總榜 (HUNTER ASSOC. DB)
+# 🌟 曜日獵人星級排位總榜 (HUNTER ASSOC. DB)
 > **MAGI SYSTEM VER.2.0 - TACTICAL OPS READY**
 
 這是一個專為「曜日羽球團」打造的專屬星級積分排行榜系統。結合了《獵人》的念能力階級設定與《EVA》MAGI 系統的賽博龐克（Cyberpunk）視覺風格。系統會自動讀取 Google 試算表（Google Sheets）的即時資料，將枯燥的羽球積分轉化為熱血的「獵人考核檔案」。
